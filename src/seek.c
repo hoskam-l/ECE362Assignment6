@@ -2,8 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-#include "common.h"
-#include "common_threads.h"
+#include "myTools.h"
 
 #define MAX_ROWS 16000
 #define MAX_COLS 16000
@@ -66,18 +65,7 @@ void makeAnImage()
       Image[row][col] = rand() % 2;
 }
 
-pthread_t *CreatePthreadArray(int num, int Row, )
-{
-  pthread_t *threadArr;
 
-
-  threadArr = malloc(sizeof(pthread_t)*num);
-
-  for(int i = 0; i< num; i++)
-  {
-    Pthread_create(&threadArr[i], NULL, checkForMatch, Rows, Cols);
-  }
-}
 
 int main(int argc, char *argv[])
 {
