@@ -91,24 +91,40 @@ int main(int argc, char *argv[])
     {
       Detect_len = atoi(argv[1]);
     }
+    else if(strcmp(argv[0], "-t" ) == 0 ) 
+    {
+      threads = atoi(argv[1]); //stores -t value in threads
+    }
     else
     {
       printf("\nInvalid Arguments\n");
       exit(-1);
     }
-  }
-  // to make more simple we want to have a square
-  if(Rows != Cols)
-  {
-    printf("\nPlease use equal numbers for -r and -c\n");
-    printf("Try again\n");
-    exit(-1);
-  }
-  makeAnImage();
-
-  for (int row = 0; row < Rows; row++)
-    for (int col = 0; col < Cols; col++)
-      found += checkForMatch(row, col);
+    
+//The code below creates a number of threads based on the value input by the user after -t
+  //we need to then create a function that divides the numeber of rows by the number of 
+  //threads and loops through each one using the check for match function. 
+  //for example, if we used 2 threads and there were 16 rows then thread one would loop through
+  //rows 1-8 and thread 2 would loop through rows 9-16
+  
+	/*
+	if(threads == 1 || threads == 2 || threads == 4 || threads == 8 || threads == 16)
+	  {
+		     // Let us create the threads
+		for (int i = 0; i < threads; i++)
+		{
+			err = pthread_create(&tid, NULL, myThreadFun, (void *)&tid);
+		}
+		pthread_exit(NULL);
+	  }
+	  else
+	  {
+		  perror("error thread value must be 1, 4, 8, or 16");
+	  }
+	*/
+  for(int row=0; row < Rows; row++)
+     for(int col=0; col < Cols; col++)
+       found += checkForMatch(row,col);
 
   printf("\nTOTAL DETECTED: %d\n", found);
 
