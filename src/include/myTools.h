@@ -7,6 +7,9 @@
 #include <pthread.h>
 #include <sched.h>
 
+extern int Rows;
+extern int Cols;
+
 #define Pthread_create(thread, attr, start_routine, arg) assert(pthread_create(thread, attr, start_routine, arg) == 0);
 
 double GetTime()
@@ -22,6 +25,16 @@ void Spin(int howlong)
     double t = GetTime();
     while ((GetTime() - t) < (double)howlong)
         ; // do nothing in loop
+}
+
+void checkSquare()
+{
+     if(Rows != Cols)
+  {
+    printf("\nPlease use equal numbers for -r and -c\n");
+    printf("Try again\n");
+    exit(-1);
+  }
 }
 
 #endif // __myTools_h__
