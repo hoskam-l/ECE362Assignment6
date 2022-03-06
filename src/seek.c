@@ -103,7 +103,8 @@ int main(int argc, char *argv[]) {
   //we need to then create a function that divides the numeber of rows by the number of 
   //threads and loops through each one using the check for match function. 
   //if we used 2 threads and there were 16 rows then thread one would loop through
-  //rows 1-8 and thread 2 would loop through rows 9-16
+  //rows 1-8 and thread 2 would loop through rows 9-1
+//currently pthread has not been used yet(althrough I did use pthread on a dummy function to test that the code below worked. 
   
 	
 	if(threads == 1 || threads == 2 || threads == 4 || threads == 8 || threads == 16)
