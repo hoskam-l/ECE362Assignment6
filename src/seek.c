@@ -68,7 +68,7 @@ void makeAnImage()
 dmatch creates ranges for check for match which will go in place of printf
 statement in the function below.
 */
-void dmatch(int range1, int range2, int Cols)
+int dmatch(int range1, int range2, int Cols)
 {
   int found = 0;
   for (int row = range1; row < range2; row++)
@@ -81,6 +81,7 @@ void dmatch(int range1, int range2, int Cols)
     }
   }
   printf("Number Found: %d\n", found);
+  return found;
 }
 
 int main(int argc, char *argv[])
@@ -143,7 +144,7 @@ int main(int argc, char *argv[])
       while (k < threads)
       {
         printf("----------------------Number of Runs %d----------------------\n", k);
-        dmatch(range1[k], range2[k], Cols);
+        found += dmatch(range1[k], range2[k], Cols);
         k++;
       }
     }
