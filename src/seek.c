@@ -7,6 +7,7 @@
 #define MAX_ROWS 16000
 #define MAX_COLS 16000
 #define DETECT_LEN 20
+#define MAX_THREADS 16
 
 int Rows = MAX_ROWS;
 int Cols = MAX_COLS;
@@ -118,7 +119,8 @@ int main(int argc, char *argv[])
   // rows 1-8 and thread 2 would loop through rows 9-1
   // currently pthread has not been used yet(althrough I did use pthread on a dummy function to test that the code below worked.
 
-  if (threads == 1 || threads == 2 || threads == 4 || threads == 8 || threads == 16)
+  //if (threads == 1 || threads == 2 || threads == 4 || threads == 8 || threads == 16)
+  if(MAX_THREADS % threads == 0  && threads <= MAX_THREADS)
   {
     // if rows are divisible by n threads
     if (Rows % threads == 0)

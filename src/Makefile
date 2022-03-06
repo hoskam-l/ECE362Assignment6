@@ -2,7 +2,7 @@
 ROW = 10
 COL = $(ROW)
 LEN = 3
-SEED = 1
+SEED = 5
 THREAD = 2
 
 
