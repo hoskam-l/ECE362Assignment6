@@ -66,66 +66,87 @@ void makeAnImage()
 }
 
 
-
-int main(int argc, char *argv[])
+/*
+dmatch creates ranges for check for match which will go in place of printf 
+statement in the function below.
+*/
+void dmatch(int range1, int range2, int Cols)
 {
-  int found = 0;
+    for(int row=range1; row < range2; row++)
+    {
+        for(int col=0; col < Cols; col++)
+        {
+            printf("Row: %d Column: %d \n", row, col);
+        }
+    }
+}
 
- 
+int main(int argc, char *argv[]) {
+  int found =0;
+  int threads =0;
+  int quotient;
+  int range1[20], range2[20]; //DEBUG: remove hard coding
+  pthread_t tid;  
 
-  for (argc--, argv++; argc > 0; argc -= 2, argv += 2)
-  {
-    if (strcmp(argv[0], "-s") == 0)
-    {
-      srand(atoi(argv[1]));
-    }
-    else if (strcmp(argv[0], "-r") == 0)
-    {
-      Rows = atoi(argv[1]);
-    }
-    else if (strcmp(argv[0], "-c") == 0)
-    {
-      Cols = atoi(argv[1]);
-    }
-    else if (strcmp(argv[0], "-l") == 0)
-    {
-      Detect_len = atoi(argv[1]);
-    }
-    else if(strcmp(argv[0], "-t" ) == 0 ) 
-    {
-      threads = atoi(argv[1]); //stores -t value in threads
-    }
-    else
-    {
-      printf("\nInvalid Arguments\n");
-      exit(-1);
-    }
-    
-//The code below creates a number of threads based on the value input by the user after -t
+  for( argc--, argv++; argc > 0; argc-=2, argv+=2  ) {
+          if      (strcmp(argv[0], "-s" ) == 0 ) srand ( atoi(argv[1]) );
+          else if (strcmp(argv[0], "-r" ) == 0 ) Rows = atoi(argv[1]);
+          else if (strcmp(argv[0], "-c" ) == 0 ) Cols = atoi(argv[1]);
+          else if (strcmp(argv[0], "-l" ) == 0 ) Detect_len = atoi(argv[1]);
+		  else if(strcmp(argv[0], "-t" ) == 0 ) threads = atoi(argv[1]); //stores -t value in threads
+          else { printf("\nInvalid Arguments\n"); exit(-1); }
+      }
+
+  makeAnImage();
+  
+  //The code below creates a number of threads based on the value input by the user
   //we need to then create a function that divides the numeber of rows by the number of 
   //threads and loops through each one using the check for match function. 
-  //for example, if we used 2 threads and there were 16 rows then thread one would loop through
+  //if we used 2 threads and there were 16 rows then thread one would loop through
   //rows 1-8 and thread 2 would loop through rows 9-16
   
-	/*
+	
 	if(threads == 1 || threads == 2 || threads == 4 || threads == 8 || threads == 16)
 	  {
-		     // Let us create the threads
-		for (int i = 0; i < threads; i++)
+		//if rows are divisible by n threads
+		if(rows%threads == 0)
 		{
-			err = pthread_create(&tid, NULL, myThreadFun, (void *)&tid);
-		}
-		pthread_exit(NULL);
+			//divide rows by threads
+			quotient = rows/threads;
+			int i = 0, j = 0;
+			//creates the range of values that each thread will execute
+			while(j < threads)
+			{
+
+				range1[j] = i;
+				range2[j] = i + quotient;
+				i = i + quotient;
+				j++;
+			}
+			//executes the number of threads with the specified value
+			//TODO: add threads and return value found
+			int k; 
+			while(k < threads)
+			{
+				printf("----------------------Number of Runs %d----------------------\n", k);
+				dmatch(range1[k], range2[k], Cols);
+				k++;
+			}
 	  }
 	  else
 	  {
 		  perror("error thread value must be 1, 4, 8, or 16");
 	  }
-	*/
+	  
+	  
+	  
+	  
+ /* old code
+ 
   for(int row=0; row < Rows; row++)
      for(int col=0; col < Cols; col++)
        found += checkForMatch(row,col);
-
+	*/
   printf("\nTOTAL DETECTED: %d\n", found);
 
   exit(0);
