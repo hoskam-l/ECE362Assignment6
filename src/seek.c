@@ -14,7 +14,13 @@ int Cols = MAX_COLS;
 int Detect_len = DETECT_LEN;
 int threads = 0;
 int Image[MAX_ROWS][MAX_COLS];
+typedef struct arg_struct {
+    int ran1;
+    int ran2;
+    int col;
+}args_t;
 
+args_t args;
 /**
  * Check for a match of the given length in the image
  *
@@ -75,10 +81,11 @@ void makeAnImage()
 dmatch creates ranges for check for match which will go in place of printf
 statement in the function below.
 */
-int dmatch(int range1, int range2, int Cols)
+void* dmatch()
 {
   int found = 0;
-  for (int row = range1; row < range2; row++)
+  int * result = malloc(sizeof(int));
+  for (int row = args.ran1; row < args.ran2; row++)
   {
     for (int col = 0; col < Cols; col++)
     {
@@ -88,16 +95,17 @@ int dmatch(int range1, int range2, int Cols)
     }
   }
   printf("Number Found: %d\n", found);
-  return found;
+  *result = found;
+  return (void*) result;
 }
 
 int main(int argc, char *argv[])
 {
   int found = 0;
-  
+  int *res;
   int quotient;
   int range1[MAX_THREADS], range2[MAX_THREADS]; 
-  pthread_t tid;
+  pthread_t tid[MAX_THREADS];
 
   for (argc--, argv++; argc > 0; argc -= 2, argv += 2)
   {
@@ -155,7 +163,18 @@ int main(int argc, char *argv[])
       while (k < threads)
       {
         printf("----------------------Number of Runs %d----------------------\n", k);
-        found += dmatch(range1[k], range2[k], Cols);
+        args.ran1 = range1[k];
+        args.ran2 = range2[k];
+        args.col = Cols;
+        if(pthread_create(&tid[k],NULL,&dmatch, NULL) != 0) 
+        {
+          printf("pthread_create failed");
+        }
+        if(pthread_join(tid[k],(void**) &res)!=0)
+        {
+          printf("pthread_join failed");
+        }
+        found += *res;
         k++;
       }
     }

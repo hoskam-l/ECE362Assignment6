@@ -1,5 +1,5 @@
 #Modifiable options
-ROW = 1032
+ROW = 16000
 COL = $(ROW)
 LEN = 5
 SEED = 1355646465130
@@ -23,6 +23,7 @@ clean:
 
 test:
 	./seek $(RUNOPTIONS1)
+	./seeker-base $(RUNOPTIONS2)
 
 testbase:
 	./seeker-base $(RUNOPTIONS2)
