@@ -12,6 +12,7 @@
 int Rows = MAX_ROWS;
 int Cols = MAX_COLS;
 int Detect_len = DETECT_LEN;
+int threads = 0;
 int Image[MAX_ROWS][MAX_COLS];
 
 /**
@@ -60,8 +61,14 @@ int checkForMatch(int row, int col)
 void makeAnImage()
 {
   for (int row = 0; row < Rows; row++)
+  {
     for (int col = 0; col < Cols; col++)
+    {
       Image[row][col] = rand() % 2;
+      printf("%d  ", Image[row][col]);
+    }
+  printf("\n");
+  }
 }
 
 /*
@@ -87,10 +94,10 @@ int dmatch(int range1, int range2, int Cols)
 int main(int argc, char *argv[])
 {
   int found = 0;
-  int threads = 0;
+  
   int quotient;
   int range1[20], range2[20]; // DEBUG: remove hard coding
-  pthread_t tid;
+  pthread_t tid[MAX_THREADS];
 
   for (argc--, argv++; argc > 0; argc -= 2, argv += 2)
   {
@@ -151,7 +158,8 @@ int main(int argc, char *argv[])
   }
   else
   {
-    perror("error thread value must be 1, 4, 8, or 16");
+    printf("error thread value must be 1, 4, 8, or 16");
+    exit(-1);
   }
 
   /* old code
