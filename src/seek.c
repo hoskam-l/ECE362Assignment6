@@ -109,10 +109,10 @@ int main(int argc, char *argv[]) {
 	if(threads == 1 || threads == 2 || threads == 4 || threads == 8 || threads == 16)
 	  {
 		//if rows are divisible by n threads
-		if(rows%threads == 0)
+		if(Rows%threads == 0)
 		{
 			//divide rows by threads
-			quotient = rows/threads;
+			quotient = Rows/threads;
 			int i = 0, j = 0;
 			//creates the range of values that each thread will execute
 			while(j < threads)
@@ -125,13 +125,14 @@ int main(int argc, char *argv[]) {
 			}
 			//executes the number of threads with the specified value
 			//TODO: add threads and return value found
-			int k; 
+			int k = 0 ; 
 			while(k < threads)
 			{
 				printf("----------------------Number of Runs %d----------------------\n", k);
 				dmatch(range1[k], range2[k], Cols);
 				k++;
 			}
+	  }
 	  }
 	  else
 	  {
