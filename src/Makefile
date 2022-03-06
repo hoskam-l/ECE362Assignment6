@@ -1,9 +1,9 @@
 #Modifiable options
-ROW = 10
+ROW = 1032
 COL = $(ROW)
-LEN = 3
-SEED = 5
-THREAD = 2
+LEN = 5
+SEED = 1355646465130
+THREAD = 8
 
 
 FLAGS = -Wall -pthread -std=c11

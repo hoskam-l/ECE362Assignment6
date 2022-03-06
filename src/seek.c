@@ -65,9 +65,9 @@ void makeAnImage()
     for (int col = 0; col < Cols; col++)
     {
       Image[row][col] = rand() % 2;
-      printf("%d  ", Image[row][col]);
+     // printf("%d  ", Image[row][col]);
     }
-  printf("\n");
+  //printf("\n");
   }
 }
 
@@ -96,8 +96,8 @@ int main(int argc, char *argv[])
   int found = 0;
   
   int quotient;
-  int range1[20], range2[20]; // DEBUG: remove hard coding
-  pthread_t tid[MAX_THREADS];
+  int range1[MAX_THREADS], range2[MAX_THREADS]; 
+  pthread_t tid;
 
   for (argc--, argv++; argc > 0; argc -= 2, argv += 2)
   {
@@ -128,6 +128,8 @@ int main(int argc, char *argv[])
   // currently pthread has not been used yet(althrough I did use pthread on a dummy function to test that the code below worked.
 
   //if (threads == 1 || threads == 2 || threads == 4 || threads == 8 || threads == 16)
+  /* This is checking to see if the number of threads is divisible by the number of threads and also
+  checking to see if the number of threads is less than or equal to the maximum number of threads. */
   if(MAX_THREADS % threads == 0  && threads <= MAX_THREADS)
   {
     // if rows are divisible by n threads
@@ -145,6 +147,8 @@ int main(int argc, char *argv[])
         i = i + quotient;
         j++;
       }
+
+
       // executes the number of threads with the specified value
       // TODO: add threads and return value found
       int k = 0;
