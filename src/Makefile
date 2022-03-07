@@ -1,12 +1,12 @@
 #Modifiable options
-ROW = 16
+ROW = 16000
 COL = $(ROW)
 LEN = 2
 SEED = 1
 THREAD = 16
 
 
-FLAGS = -Wall -pthread -std=c11
+FLAGS = -Wall -pthread -std=c99
 INCLUDES = ./include
 
 RUNOPTIONS1 = -r $(ROW) -c $(COL) -l $(LEN) -s $(SEED) -t $(THREAD)
