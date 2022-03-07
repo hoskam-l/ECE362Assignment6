@@ -15,12 +15,13 @@ int Cols = MAX_COLS;
 int Detect_len = DETECT_LEN;
 int threads = 0;
 int Image[MAX_ROWS][MAX_COLS];
-typedef struct arg_struct {
-    int ran1;
-    int ran2;
-    int col;
-    int sum;
-}args_t;
+typedef struct arg_struct
+{
+  int ran1;
+  int ran2;
+  int col;
+  int sum;
+} args_t;
 
 args_t args[MAX_THREADS];
 /**
@@ -73,9 +74,9 @@ void makeAnImage()
     for (int col = 0; col < Cols; col++)
     {
       Image[row][col] = rand() % 2;
-     // printf("%d  ", Image[row][col]);
+      // printf("%d  ", Image[row][col]);
     }
-  //printf("\n");
+    // printf("\n");
   }
 }
 
@@ -83,33 +84,32 @@ void makeAnImage()
 dmatch creates ranges for check for match which will go in place of printf
 statement in the function below.
 */
-void* dmatch(void *arg)
+void *dmatch(void *arg)
 {
   int found = 0;
-  int * result = malloc(sizeof(int));
-  args_t *threadArgs = (args_t*)arg;
+  int *result = malloc(sizeof(int));
+  args_t *threadArgs = (args_t *)arg;
   for (int row = threadArgs->ran1; row < threadArgs->ran2; row++)
   {
     for (int col = 0; col < Cols; col++)
     {
-      threadArgs->sum += checkForMatch(row,col);
-      
-      //printf("Row: %d Column: %d \n", row, col);
-      
+      threadArgs->sum += checkForMatch(row, col);
+
+      // printf("Row: %d Column: %d \n", row, col);
     }
   }
   printf("Number Found: %d\n", threadArgs->sum);
   *result = threadArgs->sum;
-  return (void*) result;
+  return (void *)result;
 }
 
 int main(int argc, char *argv[])
 {
   int begin, end;
-  int found= 0;
+  int found = 0;
   int *res;
   int quotient;
-  int range1[MAX_THREADS], range2[MAX_THREADS]; 
+  int range1[MAX_THREADS], range2[MAX_THREADS];
   pthread_t tid[MAX_THREADS];
   begin = time(NULL);
   for (argc--, argv++; argc > 0; argc -= 2, argv += 2)
@@ -140,56 +140,78 @@ int main(int argc, char *argv[])
   // rows 1-8 and thread 2 would loop through rows 9-1
   // currently pthread has not been used yet(althrough I did use pthread on a dummy function to test that the code below worked.
 
-  //if (threads == 1 || threads == 2 || threads == 4 || threads == 8 || threads == 16)
+  // if (threads == 1 || threads == 2 || threads == 4 || threads == 8 || threads == 16)
   /* This is checking to see if the number of threads is divisible by the number of threads and also
   checking to see if the number of threads is less than or equal to the maximum number of threads. */
-  if(MAX_THREADS % threads == 0  && threads <= MAX_THREADS)
+  if (MAX_THREADS % threads == 0 && threads <= MAX_THREADS)
   {
     // if rows are divisible by n threads
+    // if (Rows % threads == 0)
+    //{
+    // divide rows by threads
     if (Rows % threads == 0)
     {
-      // divide rows by threads
       quotient = Rows / threads;
       int i = 0, j = 0;
       // creates the range of values that each thread will execute
-      while (j < threads)
+      while (j < (threads))
       {
 
-        args[j].ran1= i;
-        args[j].ran2= i + quotient;
+        args[j].ran1 = i;
+        args[j].ran2 = i + quotient;
         i = i + quotient;
         j++;
       }
-
-
-      // executes the number of threads with the specified value
-      // TODO: add threads and return value found
-      int k = 0;
-      while (k < threads)
+    }
+    else
+    {
+      quotient = Rows / threads;
+      //int leftOver = Rows % threads;
+      int i = 0, j = 0;
+      // creates the range of values that each thread will execute
+      while (j < (threads - 1))
       {
-        printf("----------------------Number of Runs %d----------------------\n", k);
-        // args.ran1 = range1[k];
-        // args.ran2 = range2[k];
-        //args.col = Cols;
-        if(pthread_create(&tid[k],NULL,&dmatch, &args[k]) != 0) 
-        {
-          printf("pthread_create failed");
-        }
-        
-        k++;
+
+        args[j].ran1 = i;
+        args[j].ran2 = i + quotient;
+        i = i + quotient;
+        printf("range1[%d]: %d\n", j, args[j].ran1);
+        printf("range2[%d]: %d\n", j, args[j].ran2);
+        j++;
       }
-      k = 0;
-      while (k < threads)
-      {
-        if(pthread_join(tid[k],(void**) &res)!=0)
-        {
-          printf("pthread_join #%d failed", k);
-        }
-        found += *res;
-        k++;
-      }
+      args[j].ran1 = i;
+      args[j].ran2 = Rows;
+      printf("range1[%d]: %d\n", j, args[j].ran1);
+        printf("range2[%d]: %d\n", j, args[j].ran2);
     }
 
+    // executes the number of threads with the specified value
+    // TODO: add threads and return value found
+    int k = 0;
+    while (k < threads)
+    {
+      printf("----------------------Number of Runs %d----------------------\n", k);
+      // args.ran1 = range1[k];
+      // args.ran2 = range2[k];
+      // args.col = Cols;
+      if (pthread_create(&tid[k], NULL, &dmatch, &args[k]) != 0)
+      {
+        printf("pthread_create failed");
+      }
+
+      k++;
+    }
+    k = 0;
+    while (k < threads)
+    {
+      if (pthread_join(tid[k], (void **)&res) != 0)
+      {
+        printf("pthread_join #%d failed", k);
+      }
+      found += *res;
+      k++;
+    }
+    //}
   }
   else
   {
@@ -206,7 +228,7 @@ int main(int argc, char *argv[])
   printf("\nTOTAL DETECTED: %d\n", found);
   end = time(NULL) - begin;
 
-  printf("elapsed time: %d\n",end);
+  printf("elapsed time: %d\n", end);
 
   exit(0);
 }
