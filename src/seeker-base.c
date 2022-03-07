@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <time.h>
 
 #define MAX_ROWS     16000
 #define MAX_COLS     16000
@@ -37,7 +38,8 @@ void makeAnImage() {
 
 int main(int argc, char *argv[]) {
   int found =0;
-
+  int begin, end;
+  begin = time(NULL);
   for( argc--, argv++; argc > 0; argc-=2, argv+=2  ) {
           if      (strcmp(argv[0], "-s" ) == 0 ) srand ( atoi(argv[1]) );
           else if (strcmp(argv[0], "-r" ) == 0 ) Rows = atoi(argv[1]);
@@ -53,6 +55,8 @@ int main(int argc, char *argv[]) {
        found += checkForMatch(row,col);
 
   printf("\nTOTAL DETECTED: %d\n", found);
+   end = time(NULL) - begin;
 
+  printf("elapsed time: %d\n",end);
   exit(0);
 }

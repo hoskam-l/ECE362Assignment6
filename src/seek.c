@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <string.h>
 #include "myTools.h"
+#include <time.h>
 
 #define MAX_ROWS 16000
 #define MAX_COLS 16000
@@ -101,12 +102,13 @@ void* dmatch()
 
 int main(int argc, char *argv[])
 {
+  int begin, end;
   int found = 0;
   int *res;
   int quotient;
   int range1[MAX_THREADS], range2[MAX_THREADS]; 
   pthread_t tid[MAX_THREADS];
-
+  begin = time(NULL);
   for (argc--, argv++; argc > 0; argc -= 2, argv += 2)
   {
     if (strcmp(argv[0], "-s") == 0)
@@ -192,6 +194,9 @@ int main(int argc, char *argv[])
         found += checkForMatch(row,col);
    */
   printf("\nTOTAL DETECTED: %d\n", found);
+  end = time(NULL) - begin;
+
+  printf("elapsed time: %d\n",end);
 
   exit(0);
 }
