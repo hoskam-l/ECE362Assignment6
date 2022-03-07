@@ -19,9 +19,10 @@ typedef struct arg_struct {
     int ran1;
     int ran2;
     int col;
+    int sum;
 }args_t;
 
-args_t args;
+args_t args[MAX_THREADS];
 /**
  * Check for a match of the given length in the image
  *
@@ -82,28 +83,30 @@ void makeAnImage()
 dmatch creates ranges for check for match which will go in place of printf
 statement in the function below.
 */
-void* dmatch()
+void* dmatch(void *arg)
 {
   int found = 0;
   int * result = malloc(sizeof(int));
-  for (int row = args.ran1; row < args.ran2; row++)
+  args_t *threadArgs = (args_t*)arg;
+  for (int row = threadArgs->ran1; row < threadArgs->ran2; row++)
   {
     for (int col = 0; col < Cols; col++)
     {
-      found += checkForMatch(row,col);
+      threadArgs->sum += checkForMatch(row,col);
+      
       //printf("Row: %d Column: %d \n", row, col);
       
     }
   }
-  printf("Number Found: %d\n", found);
-  *result = found;
+  printf("Number Found: %d\n", threadArgs->sum);
+  *result = threadArgs->sum;
   return (void*) result;
 }
 
 int main(int argc, char *argv[])
 {
   int begin, end;
-  int found = 0;
+  int found= 0;
   int *res;
   int quotient;
   int range1[MAX_THREADS], range2[MAX_THREADS]; 
@@ -152,8 +155,8 @@ int main(int argc, char *argv[])
       while (j < threads)
       {
 
-        range1[j] = i;
-        range2[j] = i + quotient;
+        args[j].ran1= i;
+        args[j].ran2= i + quotient;
         i = i + quotient;
         j++;
       }
@@ -165,10 +168,10 @@ int main(int argc, char *argv[])
       while (k < threads)
       {
         printf("----------------------Number of Runs %d----------------------\n", k);
-        args.ran1 = range1[k];
-        args.ran2 = range2[k];
-        args.col = Cols;
-        if(pthread_create(&tid[k],NULL,&dmatch, NULL) != 0) 
+        // args.ran1 = range1[k];
+        // args.ran2 = range2[k];
+        //args.col = Cols;
+        if(pthread_create(&tid[k],NULL,&dmatch, &args[k]) != 0) 
         {
           printf("pthread_create failed");
         }
@@ -180,7 +183,7 @@ int main(int argc, char *argv[])
       {
         if(pthread_join(tid[k],(void**) &res)!=0)
         {
-          printf("pthread_join failed");
+          printf("pthread_join #%d failed", k);
         }
         found += *res;
         k++;
