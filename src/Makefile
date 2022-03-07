@@ -13,10 +13,10 @@ RUNOPTIONS1 = -r $(ROW) -c $(COL) -l $(LEN) -s $(SEED) -t $(THREAD)
 RUNOPTIONS2 = -r $(ROW) -c $(COL) -l $(LEN) -s $(SEED) 
 
 seek: seek.c
-	gcc -I $(INCLUDES) -o seek seek.c $(FLAGS)
+	gcc -I $(INCLUDES) $(FLAGS) -o seek seek.c 
 
 seeker-base: seeker-base.c
-	gcc -I $(INCLUDES) -o base seeker-base.c $(FLAGS)
+	gcc -I $(INCLUDES) $(FLAGS) -o base seeker-base.c 
 
 clean: 
 	rm -f base seek seeker-base
