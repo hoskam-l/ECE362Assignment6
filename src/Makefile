@@ -6,7 +6,7 @@ SEED = 1
 THREAD = 16
 
 
-FLAGS = -Wall -pthread -std=c99
+FLAGS = -Wall -pthread -std=c11
 INCLUDES = ./include
 
 RUNOPTIONS1 = -r $(ROW) -c $(COL) -l $(LEN) -s $(SEED) -t $(THREAD)
@@ -15,7 +15,7 @@ RUNOPTIONS2 = -r $(ROW) -c $(COL) -l $(LEN) -s $(SEED)
 seek: seek.c
 	gcc -I $(INCLUDES) -o seek seek.c $(FLAGS)
 
-base: seeker-base.c
+seeker-base: seeker-base.c
 	gcc -I $(INCLUDES) -o base seeker-base.c $(FLAGS)
 
 clean: 
