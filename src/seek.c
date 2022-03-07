@@ -172,6 +172,12 @@ int main(int argc, char *argv[])
         {
           printf("pthread_create failed");
         }
+        
+        k++;
+      }
+      k = 0;
+      while (k < threads)
+      {
         if(pthread_join(tid[k],(void**) &res)!=0)
         {
           printf("pthread_join failed");
@@ -180,6 +186,7 @@ int main(int argc, char *argv[])
         k++;
       }
     }
+
   }
   else
   {

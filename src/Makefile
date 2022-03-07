@@ -1,9 +1,9 @@
 #Modifiable options
 ROW = 16000
 COL = $(ROW)
-LEN = 5
+LEN = 2
 SEED = 1355646465130
-THREAD = 8
+THREAD = 16
 
 
 FLAGS = -Wall -pthread -std=c11
