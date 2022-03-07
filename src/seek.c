@@ -19,7 +19,6 @@ typedef struct arg_struct
 {
   int ran1;
   int ran2;
-  int col;
   int sum;
 } args_t;
 
@@ -86,7 +85,7 @@ statement in the function below.
 */
 void *dmatch(void *arg)
 {
-  int found = 0;
+
   int *result = malloc(sizeof(int));
   args_t *threadArgs = (args_t *)arg;
   for (int row = threadArgs->ran1; row < threadArgs->ran2; row++)
@@ -107,9 +106,9 @@ int main(int argc, char *argv[])
 {
   int begin, end;
   int found = 0;
-  int *res;
+  // int *res;
   int quotient;
-  int range1[MAX_THREADS], range2[MAX_THREADS];
+  // int range1[MAX_THREADS], range2[MAX_THREADS];
   pthread_t tid[MAX_THREADS];
   begin = time(NULL);
   for (argc--, argv++; argc > 0; argc -= 2, argv += 2)
@@ -131,7 +130,7 @@ int main(int argc, char *argv[])
     }
   }
 
-  makeAnImage();
+  
 
   // The code below creates a number of threads based on the value input by the user
   // we need to then create a function that divides the numeber of rows by the number of
@@ -140,19 +139,33 @@ int main(int argc, char *argv[])
   // rows 1-8 and thread 2 would loop through rows 9-1
   // currently pthread has not been used yet(althrough I did use pthread on a dummy function to test that the code below worked.
 
-  // if (threads == 1 || threads == 2 || threads == 4 || threads == 8 || threads == 16)
   /* This is checking to see if the number of threads is divisible by the number of threads and also
   checking to see if the number of threads is less than or equal to the maximum number of threads. */
-  if (MAX_THREADS % threads == 0 && threads <= MAX_THREADS)
+  if (MAX_THREADS % threads != 0 || threads > MAX_THREADS || threads < 0)
   {
+    printf("error thread value must be 1, 4, 8, or 16");
+    exit(-1);
+  }
+  else if (Rows > MAX_ROWS || Cols > MAX_COLS || Rows < 1 || Cols < 1)
+  {
+    printf("Columns and Rows need to be between 1 and 16000");
+    exit(-1);
+  }
+  else if(Cols< Detect_len || Rows< Detect_len)
+  {
+    printf("you must choose a detect length < row/column size");
+    exit(-1);
+  }
+  else
+  {
+    makeAnImage();
     // if rows are divisible by n threads
-    // if (Rows % threads == 0)
-    //{
     // divide rows by threads
+    quotient = Rows / threads;
+    int i = 0, j = 0;
     if (Rows % threads == 0)
     {
-      quotient = Rows / threads;
-      int i = 0, j = 0;
+
       // creates the range of values that each thread will execute
       while (j < (threads))
       {
@@ -165,9 +178,9 @@ int main(int argc, char *argv[])
     }
     else
     {
-      quotient = Rows / threads;
-      //int leftOver = Rows % threads;
-      int i = 0, j = 0;
+
+      // int leftOver = Rows % threads;
+
       // creates the range of values that each thread will execute
       while (j < (threads - 1))
       {
@@ -182,18 +195,15 @@ int main(int argc, char *argv[])
       args[j].ran1 = i;
       args[j].ran2 = Rows;
       printf("range1[%d]: %d\n", j, args[j].ran1);
-        printf("range2[%d]: %d\n", j, args[j].ran2);
+      printf("range2[%d]: %d\n", j, args[j].ran2);
     }
 
     // executes the number of threads with the specified value
-    // TODO: add threads and return value found
     int k = 0;
     while (k < threads)
     {
       printf("----------------------Number of Runs %d----------------------\n", k);
-      // args.ran1 = range1[k];
-      // args.ran2 = range2[k];
-      // args.col = Cols;
+
       if (pthread_create(&tid[k], NULL, &dmatch, &args[k]) != 0)
       {
         printf("pthread_create failed");
@@ -204,19 +214,13 @@ int main(int argc, char *argv[])
     k = 0;
     while (k < threads)
     {
-      if (pthread_join(tid[k], (void **)&res) != 0)
+      if (pthread_join(tid[k], NULL) != 0)
       {
         printf("pthread_join #%d failed", k);
       }
-      found += *res;
+      found += args[k].sum;
       k++;
     }
-    //}
-  }
-  else
-  {
-    printf("error thread value must be 1, 4, 8, or 16");
-    exit(-1);
   }
 
   /* old code

@@ -1,7 +1,7 @@
 #Modifiable options
 ROW = 16000
 COL = $(ROW)
-LEN = 2
+LEN = 20
 SEED = 1
 THREAD = 16
 
@@ -21,9 +21,9 @@ seeker-base: seeker-base.c
 clean: 
 	rm -f base seek seeker-base
 
-test: seek seeker-base
+test: seek base
 	./seek $(RUNOPTIONS1)
-	./seeker-base $(RUNOPTIONS2)
+	./base $(RUNOPTIONS2)
 
 testbase: seeker-base
-	./seeker-base $(RUNOPTIONS2)
+	./base $(RUNOPTIONS2)
