@@ -21,7 +21,7 @@ seeker-base: seeker-base.c
 clean: 
 	rm -f base seek seeker-base
 
-test: seek base
+test: seek seeker-base
 	./seek $(RUNOPTIONS1)
 	./base $(RUNOPTIONS2)
 
