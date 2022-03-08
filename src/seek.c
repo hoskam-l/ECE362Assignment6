@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-#include "myTools.h"
+#include <pthread.h>
 
 
 #define MAX_ROWS 16000
