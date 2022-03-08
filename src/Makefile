@@ -2,7 +2,7 @@
 ROW = 16000
 COL = $(ROW)
 LEN = 20
-SEED = 1
+SEED = 15
 THREAD = 16
 
 
@@ -22,8 +22,8 @@ clean:
 	rm -f base seek seeker-base
 
 test: seek seeker-base
-	./seek $(RUNOPTIONS1)
-	./base $(RUNOPTIONS2)
+	time -p ./seek $(RUNOPTIONS1)
+	time -p ./base $(RUNOPTIONS2)
 
 testbase: seeker-base
-	./base $(RUNOPTIONS2)
+	time -p ./base $(RUNOPTIONS2)

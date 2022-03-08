@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <string.h>
 #include "myTools.h"
-#include <time.h>
+
 
 #define MAX_ROWS 16000
 #define MAX_COLS 16000
@@ -93,24 +93,18 @@ void *dmatch(void *arg)
     for (int col = 0; col < Cols; col++)
     {
       threadArgs->sum += checkForMatch(row, col);
-
-      // printf("Row: %d Column: %d \n", row, col);
     }
   }
-  printf("Number Found: %d\n", threadArgs->sum);
+
   *result = threadArgs->sum;
   return (void *)result;
 }
 
 int main(int argc, char *argv[])
 {
-  int begin, end;
   int found = 0;
-  // int *res;
   int quotient;
-  // int range1[MAX_THREADS], range2[MAX_THREADS];
   pthread_t tid[MAX_THREADS];
-  begin = time(NULL);
   for (argc--, argv++; argc > 0; argc -= 2, argv += 2)
   {
     if (strcmp(argv[0], "-s") == 0)
@@ -129,8 +123,6 @@ int main(int argc, char *argv[])
       exit(-1);
     }
   }
-
-  
 
   // The code below creates a number of threads based on the value input by the user
   // we need to then create a function that divides the numeber of rows by the number of
@@ -151,7 +143,7 @@ int main(int argc, char *argv[])
     printf("Columns and Rows need to be between 1 and 16000");
     exit(-1);
   }
-  else if(Cols< Detect_len || Rows< Detect_len)
+  else if (Cols < Detect_len || Rows < Detect_len)
   {
     printf("you must choose a detect length < row/column size");
     exit(-1);
@@ -188,22 +180,16 @@ int main(int argc, char *argv[])
         args[j].ran1 = i;
         args[j].ran2 = i + quotient;
         i = i + quotient;
-        printf("range1[%d]: %d\n", j, args[j].ran1);
-        printf("range2[%d]: %d\n", j, args[j].ran2);
         j++;
       }
       args[j].ran1 = i;
       args[j].ran2 = Rows;
-      printf("range1[%d]: %d\n", j, args[j].ran1);
-      printf("range2[%d]: %d\n", j, args[j].ran2);
     }
 
     // executes the number of threads with the specified value
     int k = 0;
     while (k < threads)
     {
-      printf("----------------------Number of Runs %d----------------------\n", k);
-
       if (pthread_create(&tid[k], NULL, &dmatch, &args[k]) != 0)
       {
         printf("pthread_create failed");
@@ -223,16 +209,8 @@ int main(int argc, char *argv[])
     }
   }
 
-  /* old code
 
-   for(int row=0; row < Rows; row++)
-      for(int col=0; col < Cols; col++)
-        found += checkForMatch(row,col);
-   */
   printf("\nTOTAL DETECTED: %d\n", found);
-  end = time(NULL) - begin;
-
-  printf("elapsed time: %d\n", end);
 
   exit(0);
 }
