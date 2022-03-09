@@ -101,7 +101,7 @@ void *dmatch(void *arg)
   }
 
   *result = threadArgs->sum;
-  //return (void *)result;
+  return (void *)result;
 }
 
 int main(int argc, char *argv[])
@@ -192,7 +192,7 @@ int main(int argc, char *argv[])
       if (pthread_join(tid[k], NULL) != 0)
       {
         printf("pthread_join #%d failed", k);
-        exit(-1)
+        exit(-1);
       }
       found += args[k].sum;
       k++;
