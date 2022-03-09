@@ -1,7 +1,7 @@
 #Modifiable options
 ROW = 5000
 COL = $(ROW)
-LEN = 20
+LEN = 2
 SEED = 15
 THREAD_A = 1
 THREAD_B = 2
