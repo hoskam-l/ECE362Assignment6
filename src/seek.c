@@ -155,23 +155,7 @@ int main(int argc, char *argv[])
     // divide rows by threads
     quotient = Rows / threads;
     int i = 0, j = 0;
-    if (Rows % threads == 0)
-    {
 
-      // creates the range of values that each thread will execute
-      while (j < (threads))
-      {
-
-        args[j].ran1 = i;
-        args[j].ran2 = i + quotient;
-        i = i + quotient;
-        j++;
-      }
-    }
-    else
-    {
-
-      // int leftOver = Rows % threads;
 
       // creates the range of values that each thread will execute
       while (j < (threads - 1))
@@ -184,7 +168,7 @@ int main(int argc, char *argv[])
       }
       args[j].ran1 = i;
       args[j].ran2 = Rows;
-    }
+  
 
     // executes the number of threads with the specified value
     int k = 0;
