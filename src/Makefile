@@ -1,8 +1,15 @@
+# ECE362
+# Assignment 6 
+# Dr. Schubert
+# by luke hoskam
+# by Hayden Galante
+# Makefile for Assignment 6
+
 #Modifiable options
 ROW = 16000
 COL = $(ROW)
-LEN = 200
-SEED = 15
+LEN = 30
+SEED = 46548
 THREAD_A = 1
 THREAD_B = 2
 THREAD_C = 4

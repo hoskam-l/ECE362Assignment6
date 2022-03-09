@@ -1,9 +1,14 @@
+// Assignment 6
+// Dr. Schubert
+// by luke hoskam
+// by Hayden Galante
+// seek Program for Assignment 6
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
 #include <pthread.h>
-
 
 #define MAX_ROWS 16000
 #define MAX_COLS 16000
@@ -72,10 +77,8 @@ void makeAnImage()
   {
     for (int col = 0; col < Cols; col++)
     {
-      Image[row][col] = rand() % 2;
-      // printf("%d  ", Image[row][col]);
+      Image[row][col] = rand() % 2; 
     }
-    // printf("\n");
   }
 }
 
@@ -85,8 +88,9 @@ statement in the function below.
 */
 void *dmatch(void *arg)
 {
-
   int *result = malloc(sizeof(int));
+  // Since arg is a void pointer we need to create a struct of args_t to hold the
+  // data.  And since arg is passed as a void we can make it any kind of pointer.
   args_t *threadArgs = (args_t *)arg;
   for (int row = threadArgs->ran1; row < threadArgs->ran2; row++)
   {
@@ -97,7 +101,7 @@ void *dmatch(void *arg)
   }
 
   *result = threadArgs->sum;
-  return (void *)result;
+  //return (void *)result;
 }
 
 int main(int argc, char *argv[])
@@ -131,8 +135,8 @@ int main(int argc, char *argv[])
   // rows 1-8 and thread 2 would loop through rows 9-1
   // currently pthread has not been used yet(althrough I did use pthread on a dummy function to test that the code below worked.
 
-  /* This is checking to see if the number of threads is divisible by the number of threads and also
-  checking to see if the number of threads is less than or equal to the maximum number of threads. */
+  // Here we check to see if the inputs are valid. 
+
   if (MAX_THREADS % threads != 0 || threads > MAX_THREADS || threads < 0)
   {
     printf("error thread value must be 1, 4, 8, or 16");
@@ -150,25 +154,24 @@ int main(int argc, char *argv[])
   }
   else
   {
+    //If all inputs are valid, we proceed. 
     makeAnImage();
     // if rows are divisible by n threads
     // divide rows by threads
     quotient = Rows / threads;
     int i = 0, j = 0;
 
+    // creates the range of values that each thread will execute
+    while (j < (threads - 1))
+    {
 
-      // creates the range of values that each thread will execute
-      while (j < (threads - 1))
-      {
-
-        args[j].ran1 = i;
-        args[j].ran2 = i + quotient;
-        i = i + quotient;
-        j++;
-      }
       args[j].ran1 = i;
-      args[j].ran2 = Rows;
-  
+      args[j].ran2 = i + quotient;
+      i = i + quotient;
+      j++;
+    }
+    args[j].ran1 = i;
+    args[j].ran2 = Rows;
 
     // executes the number of threads with the specified value
     int k = 0;
@@ -177,23 +180,25 @@ int main(int argc, char *argv[])
       if (pthread_create(&tid[k], NULL, &dmatch, &args[k]) != 0)
       {
         printf("pthread_create failed");
+        exit(-1);
       }
 
       k++;
     }
+    // join the threads back with the program
     k = 0;
     while (k < threads)
     {
       if (pthread_join(tid[k], NULL) != 0)
       {
         printf("pthread_join #%d failed", k);
+        exit(-1)
       }
       found += args[k].sum;
       k++;
     }
   }
-
-
+  // print number of matches detected
   printf("\nTOTAL DETECTED: %d\n", found);
 
   exit(0);
